@@ -1,0 +1,15 @@
+{
+    "name": "chain/zernite",
+    "description": "Module for Zaphire",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Zernite\\": "src/Zernite",
+            "Api\\": "src/api"
+        }
+    },
+    "require": {
+      "ext-pdo": "*",
+      "ext-json": "*"
+    }
+}

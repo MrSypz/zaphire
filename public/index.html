@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zernite</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/fontstyle.css">
+    <link rel="stylesheet" href="css/zerdal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="script/ApiUtil.js"></script>
+    <script src="script/Zerdal.js"></script>
+    <script src="script/ZerniteTask.js"></script>
+
+</head>
+<body>
+<aside class="sidebar">
+    <header class="sidebar-header">
+        <h2>Zernite</h2>
+    </header>
+    <div class="element-list">
+        <div class="element-item">
+            <i class="fa fa-home"></i>
+            <div class="element-item-info">
+                <h4>Home</h4>
+            </div>
+        </div>
+        <div class="element-item">
+            <i class="fa fa-trophy"></i>
+            <div class="element-item-info">
+                <h4>Tournaments</h4>
+            </div>
+        </div>
+        <div class="element-item">
+            <i class="fa fa-users"></i>
+            <div class="element-item-info" onclick="window.location.href = './form/teammanage.html';">
+                <h4>Teams</h4>
+            </div>
+        </div>
+        <button class="dashboard-button" onclick="window.location.href = './form/create_tournament.html';">
+            <p>Create Tournament</p>
+        </button>
+    </div>
+    <div class="user-info">
+        <div class="user-avatar">
+            <img src="../resource/placeholder.gif" id="info-avatar"/>
+        </div>
+        <div class="user-details">
+            <h3 id="info-username">Guest</h3>
+            <p id="info-userid">Login !</p>
+        </div>
+        <button class="user-action-button" id="user-action-button">
+            <i class="fa" id="user-action-icon"></i>
+        </button>
+    </div>
+</aside>
+<main class="content">
+    <header class="content-header">
+        <input type="text" placeholder="Search tournaments" class="search-input">
+    </header>
+    <div class="tournament-bracket">
+        <h2>Tournament 1 Bracket</h2>
+        <div class="rounds">
+            <div class="round">
+                <h3>Round 1</h3>
+                <div class="match">
+                    <div class="team">Team A <span class="score">2</span></div>
+                    <div class="team">Team B <span class="score">1</span></div>
+                </div>
+                <div class="match">
+                    <div class="team">Team C <span class="score">0</span></div>
+                    <div class="team">Team D <span class="score">2</span></div>
+                </div>
+            </div>
+            <div class="round">
+                <h3>Round 2</h3>
+                <div class="match">
+                    <div class="team">Team A <span class="score">2</span></div>
+                    <div class="team">Team D <span class="score">0</span></div>
+                </div>
+            </div>
+            <div class="round">
+                <h3>Final</h3>
+                <div class="match">
+                    <div class="team">Team A <span class="score">3</span></div>
+                    <div class="team">Team E <span class="score">2</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    async function updateUserButton() {
+        const isLoggedIn = await checkLoginStatus();
+
+        const button = document.getElementById("user-action-button");
+        const icon = document.getElementById("user-action-icon");
+
+        if (isLoggedIn) {
+            icon.className = "fa fa-cog";
+            button.onclick = () => {
+                window.location.href = "./form/setting.html";
+            };
+
+            const userInfo = await getUserInfo();
+            if (userInfo && userInfo.Username && userInfo.UserID) {
+                document.getElementById("info-username").textContent = userInfo.Name;
+                document.getElementById("info-userid").textContent = `#${userInfo.UserID}`;
+                document.getElementById("info-avatar").src = userInfo.ProfilePicture
+                    ? userInfo.ProfilePicture.replace("../../", "../")
+                    : "../resource/placeholder.gif";
+
+            }
+        } else {
+            icon.className = "fa fa-sign-in";
+            button.onclick = () => {
+                window.location.href = "./form/authme.html";
+            };
+            document.getElementById("info-username").textContent = "Guest";
+            document.getElementById("info-userid").textContent = "Login!";
+        }
+    }
+    document.addEventListener('DOMContentLoaded', async function () {
+        const isUserLoggedIn = await checkLoginStatus(); // Implement this function to check actual login status
+        console.log(isUserLoggedIn);
+        const teamElement = document.querySelector('.element-item i.fa-users').parentNode;
+        const createTournamentButton = document.querySelector('.dashboard-button');
+        if (!isUserLoggedIn) {
+            teamElement.style.opacity = '0.5';
+            teamElement.style.cursor = 'not-allowed';
+            teamElement.querySelector('.element-item-info').removeAttribute('onclick');
+
+            createTournamentButton.disabled = true;
+            createTournamentButton.style.opacity = '0.5';
+            createTournamentButton.style.cursor = 'not-allowed';
+            createTournamentButton.onclick = null;
+
+            [teamElement, createTournamentButton].forEach(el => {
+                el.title = 'Please log in to access this feature';
+            });
+        }
+    });
+    document.addEventListener("DOMContentLoaded",
+        updateUserButton
+    );
+</script>
+</body>
+</html>

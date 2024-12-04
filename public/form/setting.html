@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setting</title>
+    <link rel="stylesheet" href="../css/setting.css">
+    <link rel="stylesheet" href="../css/fontstyle.css">
+    <link rel="stylesheet" href="../css/zerdal.css">
+    <script src="https://kit.fontawesome.com/847879489a.js" crossorigin="anonymous"></script>
+    <script src="../script/Zerdal.js"></script>
+    <script src="../script/ZerniteTask.js"></script>
+    <script src="../script/ApiUtil.js"></script>
+</head>
+<body class="bg-gray-900 text-gray-100">
+<div class="flex h-screen">
+    <div class="sidebar">
+       
+        <nav class="menu">
+            <button class="menu-item active"> 
+                <i class="fa-regular fa-circle-user" style="font-size: 16px;"></i>
+                My Account
+            </button>
+            <button class="menu-item" onclick="window.location.href='setting-invite.html'"> 
+                <i class="fa-solid fa-inbox" style="font-size: 16px;"></i>
+                Invite
+            </button>
+            <button class="menu-item" onclick>
+                <i class="fa-solid fa-user-group" style="font-size: 16px;"></i>
+                My Team
+            </button>
+            <button class="menu-item logout" onclick="dologout(event);">
+                <i class="fa fa-sign-out" style="font-size: 20px"></i>
+                Logout
+            </button>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="max-w-3xl mx-auto">
+            <div class="header">
+                <h1 class="text-2xl font-bold">My Account</h1>
+                <button class="icon-button" onclick="window.location.href='../index.html'">
+                    <span class="close-icon">✕</span>
+                </button>
+            </div>
+
+            <!-- Profile Settings -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="avatar">
+                        <img id="setting-profile" src="../../resource/placeholder.gif" alt=""/>
+                    </div>
+                </div>
+
+                <div class="card-content">
+                    <!-- Profile Settings -->
+                    <div class="form-group">
+                        <label>Profile Image</label>
+                        <form id="file-upload-form" method="POST" enctype="multipart/form-data">
+                            <div class="input-group">
+                                <div class="custom-file-upload">
+                                    <label for="profile-image-input" class="button secondary">Edit</label>
+                                    <input type="file" id="profile-image-input" name="profileImage"
+                                           accept=".jpg, .jpeg, .png, .jfif"/>
+                                </div>
+                                <button type="submit" id="update-profile-image-button" class="button"
+                                        style="display: none;">Update
+                                </button>
+                                <img id="profile-image-preview" alt="Profile Preview"
+                                     style="display: none; width: 120px; height: 120px; border-radius: 50%; margin-left: 10px; object-fit: cover;"/>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Display Name -->
+                    <div class="form-group">
+                        <label>DISPLAY NAME</label>
+                        <form id="display-name-form" onsubmit="updateDisplayName(event)">
+                            <div class="input-group">
+                                <div class="input-wrapper">
+                                    <input type="text" name="name" id="setting-name" value="" class="input"/>
+                                </div>
+                                <button type="submit" class="button secondary">Update</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="form-group">
+                        <label>USERNAME</label>
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <span class="icon user-icon"></span>
+                                <input type="text" id="setting-username" value="" class="input" disabled/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label>EMAIL</label>
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <span class="icon mail-icon"></span>
+                                <input type="email" id="setting-email" value="" class="input" disabled/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    const fileInput = document.getElementById('profile-image-input');
+    const previewImage = document.getElementById('profile-image-preview');
+    const updateButton = document.getElementById('update-profile-image-button');
+
+    fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/jfif'];
+            if (!validTypes.includes(file.type)) {
+                alert('Invalid file type. Please select a JFIF, JPG, or PNG file.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                // Display image preview
+                previewImage.src = reader.result;
+                previewImage.style.display = 'block';
+                updateButton.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById("file-upload-form").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+        const callback = new Zerdal();
+        try {
+            const response = await fetch('https://tyranus.online/backend/src/api/uploadfile.php', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+            if (result.success) {
+                callback.show(result.message, "success");
+            } else {
+                callback.show(result.error, "error");
+            }
+        } catch (error) {
+            callback.show(error.message, "error");
+        }
+    });
+
+    function updateDisplayName(event) {
+        event.preventDefault();
+        const form = document.getElementById('display-name-form');
+        const formData = new FormData(form);
+        const jsonData = Object.fromEntries(formData);
+        const callback = new Zerdal();
+        ApiUtil.handleApiCallModal(ApiUtil.callApi(Entity.USER, Actions[Entity.USER].UPDATE_USER, jsonData), callback);
+    }
+
+    async function userInfo() {
+        const userInfo = await getUserInfo();
+        if (userInfo && userInfo.Username) {
+            document.getElementById("setting-name").value = userInfo.Name;
+            document.getElementById("setting-username").value = userInfo.Username;
+            document.getElementById("setting-email").value = maskEmail(userInfo.Email);
+            document.getElementById("setting-profile").src = userInfo.ProfilePicture ? userInfo.ProfilePicture : "placeholder.jpg";
+        }
+    }
+
+    function maskEmail(email) {
+        const [localPart, domain] = email.split('@');
+        const maskedLocalPart = '*'.repeat(localPart.length);
+        return `${maskedLocalPart}@${domain}`;
+    }
+
+    // async function dologout(event) {
+    //     event.preventDefault();
+    //     const callback = new Zerdal();
+    //     await ApiUtil.handleApiCallModal(ApiUtil.callApi(Entity.USER, Actions[Entity.USER].LOGOUT), callback, "Redirect to homepage");
+    //     await new Promise(resolve => setTimeout(resolve, 1000));
+    //     const islogin = await checkLoginStatus();
+    //     if (!islogin) {
+    //         window.location.href = "../index.html";
+    //     }
+    // }
+    async function dologout(event) {
+        event.preventDefault();
+        try {
+            const response = await ApiUtil.callApi(Entity.USER, Actions[Entity.USER].LOGOUT);
+            if (response.success) {
+                const logoutModal = new AnimatedModal({
+                    title: 'Logout Successful',
+                    message: 'You have been successfully logged out. Redirecting to homepage...',
+                    buttonText: 'Close',
+                    autoClose: true,
+                    autoCloseTime: 3000,
+                    onClose: () => {
+                        window.location.href = "../index.html";
+                    },
+                    type: 'success'
+                });
+                logoutModal.show();
+            } else {
+                const errorModal = new AnimatedModal({
+                    title: 'Logout Failed',
+                    message: 'Logout failed. Please try again.',
+                    type: 'error'
+                });
+                errorModal.show();
+            }
+        } catch (error) {
+            console.error("Logout error:", error);
+            const errorModal = new AnimatedModal({
+                title: 'Error',
+                message: 'An error occurred during logout. Please try again.',
+                type: 'error'
+            });
+            errorModal.show();
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", userInfo);
+</script>
+</html>

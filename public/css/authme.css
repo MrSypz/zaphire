@@ -1,0 +1,159 @@
+:root {
+    --bg-secondary: #2f3136;
+    --accent-color: #7289da;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(to bottom right, #000000, #1a1a1a);
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.4); /* Initial box-shadow (smaller glow) */
+    animation: glowAnimation ease-in-out 10s infinite alternate-reverse; /* Apply the animation */
+}
+
+@keyframes glowAnimation {
+    0% {
+        box-shadow: 0 0 5px rgba(168, 85, 247, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 30px rgba(168, 85, 247, 0.9);
+    }
+}
+.auth-exit {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    margin-top: 20px;
+    transition: transform 0.3s ease;
+}
+
+.auth-exit:hover {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    transform: scale(1.2);
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logo h1 {
+    font-size: 4rem;
+    color: #a855f7;
+}
+
+.logo p {
+    color: #9ca3af;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.tab {
+    flex: 1;
+    padding: 0.5rem;
+    text-align: center;
+    background-color: #1f2937;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tab:hover {
+    background-color: #374151;
+}
+
+.tab.active {
+    background-color: #a855f7;
+}
+
+.form {
+    display: none;
+}
+
+.form.active {
+    display: block;
+}
+
+.input-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #9ca3af;
+}
+
+input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #4b5563;
+    background-color: #1f2937;
+    color: #ffffff;
+    border-radius: 4px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #a855f7;
+}
+
+button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #a855f7;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #9333ea;
+}
+
+.binary-bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 50px;
+    overflow: hidden;
+    opacity: 0.2;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}

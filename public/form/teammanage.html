@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/teammanager.css">
+    <link rel="stylesheet" href="../css/fontstyle.css">
+    <link rel="stylesheet" href="../css/zerdal.css">
+    <script src="../script/ApiUtil.js"></script>
+    <script src="../script/Zerdal.js"></script>
+    <script src="../script/ZerniteTask.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="team-management">
+        <header class="header">
+            <div class="header-content">
+                <h1>Team Management</h1>
+                <p class="subtitle">Manage your teams and team members</p>
+            </div>
+            <button class="home-btn" onclick="goToHome()"><i class="fas fa-home"></i>Home</button>
+        </header>
+
+        <div class="content">
+            <div class="tabs-actions">
+                <div class="tabs-header">
+                    <div class="tabs">
+                        <!-- Tabs will be rendered dynamically -->
+                    </div>
+                    <button class="create-team-btn"><i class="fas fa-plus"></i>Create Team</button>
+                </div>
+                <button class="add-member-btn">Add Team Member</button>
+            </div>
+
+            <table class="team-table">
+                <p class="subtitle" id="team-name-placeholder"></p>
+                <p class="subtitle" id="team-createby-placeholder"></p>
+                <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Add this modal HTML before the closing body tag -->
+<div class="modal-register" id="createTeamModal">
+    <div class="modal-content">
+        <h2>Create New Team</h2>
+        <form id="createTeamForm">
+            <div class="form-group">
+                <label for="teamName">Team Name</label>
+                <input type="text" id="teamName" name="teamName" required>
+            </div>
+            <div class="form-group">
+                <label for="sponsorBanner">Sponsor Banner (Optional)</label>
+                <input type="text" id="sponsorBanner" name="SponsorBanner">
+            </div>
+            <input type="hidden" id="hiddenTeamId" name="teamId">
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">Create Team</button>
+                <button type="button" class="cancel-btn" onclick="closeCreateTeamModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-register" id="memberModal">
+    <div class="modal-content">
+        <h2 id="modalTitle">Add Team Member</h2>
+        <form id="memberForm">
+            <input type="hidden" id="memberId">
+            <div class="form-group">
+                <label for="userId">User ID</label>
+                <input type="number" id="userId" name="userId" required min="1">
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber">
+            </div>
+            <div class="form-group">
+                <label for="roleId">Role</label>
+                <select id="roleId" name ="roleId" required>
+                    <option value="1">Captain</option>
+                    <option value="2">Member</option>
+                    <option value="3">Substitute</option>
+                    <option value="4">Manager</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="submit-btn" id="submitBtn">Add Member</button>
+                <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", redirectLogin);
+</script>
+<script src="../script/teamManager.js"></script>
+</body>
+</html>
+
